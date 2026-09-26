@@ -52,8 +52,8 @@ public class StripeService {
         log.info("Stripe checkout session létrehozása Keycloak ID-hoz: {}", keycloakUserId);
         SessionCreateParams params = SessionCreateParams.builder()
             .setMode(SessionCreateParams.Mode.SUBSCRIPTION) // Vagy PAYMENT, ha egyszeri díjas
-            .setSuccessUrl(serverUrl + "/stripe/webhook/success") // Ide irányítja vissza a fizetés után
-            .setCancelUrl(serverUrl + "/stripe/webhook/cancel")
+            .setSuccessUrl(serverUrl + "/stripe/webhook-success") // Ide irányítja vissza a fizetés után
+            .setCancelUrl(serverUrl + "/stripe/webhook-cancel")
             .setClientReferenceId(keycloakUserId) // Ebből tudja majd a Webhook, hogy ki fizetett!
             .setCustomerEmail(email)
             .addLineItem(
