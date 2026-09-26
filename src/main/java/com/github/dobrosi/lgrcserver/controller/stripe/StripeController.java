@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController("/stripe")
-@RequestMapping
+@RestController
+@RequestMapping("/stripe")
 @Slf4j
 public class StripeController {
     @Value("${callback.url}")
@@ -33,7 +33,7 @@ public class StripeController {
         return "Hello, World!";
     }
 
-    @PostMapping("/webhook/success")
+    @PostMapping("/webhook-success")
     public ResponseEntity<String> handleStripeWebhookSuccess(
             @RequestBody String payload,
             @RequestHeader("Stripe-Signature") String sigHeader) {
@@ -50,12 +50,12 @@ public class StripeController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/webhook/success")
+    @GetMapping("/webhook-success")
     public ResponseEntity<Void> handleStripeWebhookSuccess() {
         return ResponseEntity.status(HttpStatus.FOUND).location(URI.create(callbackUrl + "?stripe-webhook-success")).build();
     }
 
-    @GetMapping("/webhook/cancel")
+    @GetMapping("/webhook-cancel")
     public ResponseEntity<Void> handleStripeWebhookCancel() {
         return ResponseEntity.status(HttpStatus.FOUND).location(URI.create(callbackUrl + "?stripe-webhook-cancel")).build();
     }
