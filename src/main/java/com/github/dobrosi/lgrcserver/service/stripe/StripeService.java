@@ -49,8 +49,8 @@ public class StripeService {
         log.info("Stripe checkout session létrehozása Keycloak ID-hoz: {}", keycloakUserId);
         SessionCreateParams params = SessionCreateParams.builder()
             .setMode(SessionCreateParams.Mode.SUBSCRIPTION)
-            .setSuccessUrl(serverUrl + "/public/stripe/webhook/success")
-            .setCancelUrl(serverUrl + "/public/stripe/webhook/cancel")
+            .setSuccessUrl(serverUrl + "/public/index.html?success=true")
+            .setCancelUrl(serverUrl + "/public/index.html?cancel=true")
             .setClientReferenceId(keycloakUserId)
             .setCustomerEmail(email)
             .addLineItem(
