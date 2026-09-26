@@ -51,10 +51,10 @@ public class StripeService {
     public String createCheckoutSession(String keycloakUserId, String email) throws StripeException {
         log.info("Stripe checkout session létrehozása Keycloak ID-hoz: {}", keycloakUserId);
         SessionCreateParams params = SessionCreateParams.builder()
-            .setMode(SessionCreateParams.Mode.SUBSCRIPTION) // Vagy PAYMENT, ha egyszeri díjas
-            .setSuccessUrl(serverUrl + "/stripe/webhook-success") // Ide irányítja vissza a fizetés után
-            .setCancelUrl(serverUrl + "/stripe/webhook-cancel")
-            .setClientReferenceId(keycloakUserId) // Ebből tudja majd a Webhook, hogy ki fizetett!
+            .setMode(SessionCreateParams.Mode.SUBSCRIPTION)
+            .setSuccessUrl(serverUrl + "/public/stripe/webhook/success")
+            .setCancelUrl(serverUrl + "/public/stripe/webhook/cancel")
+            .setClientReferenceId(keycloakUserId)
             .setCustomerEmail(email)
             .addLineItem(
                 SessionCreateParams.LineItem.builder()

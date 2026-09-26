@@ -3,9 +3,6 @@ server:
   port: ${PORT:8085}
   url: ${SERVER_URL}
 
-callback:
-  url: ${CALLBACK_URL}
-
 spring:
   forward-headers-strategy: framework
   datasource:
