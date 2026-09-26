@@ -27,7 +27,6 @@ spring:
           issuer-uri: https://auth.pgy.no-ip.hu/realms/pgy
 stripe:
   api:
-    publishableKey: ${STRIPE_API_PUBLISHABLE_KEY}
     secretKey: ${STRIPE_API_SECRET_KEY}
     webhookSigningSecret: ${STRIPE_API_WEBHOOK_SIGNING_SECRET}
   price:
