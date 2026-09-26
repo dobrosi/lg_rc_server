@@ -27,9 +27,6 @@ public class StripeService {
     @Value("${server.url}")
     private String serverUrl;
 
-    @Value("${callback.url}")
-    private String callbackUrl;
-
     @Value("${stripe.api.secretKey}")
     private String secretKey;
 
@@ -115,7 +112,7 @@ public class StripeService {
             String stripeCustomerId = subscriptionService.getOrCreateByKeycloakId(keycloakUserId).getStripeCustomerId();
             SessionCreateParams params = new SessionCreateParams.Builder()
                 .setCustomer(stripeCustomerId)
-                .setReturnUrl(callbackUrl + (Strings.isEmpty(queryParts) ? "" : "?" + queryParts))
+                .setReturnUrl(serverUrl + (Strings.isEmpty(queryParts) ? "" : "?" + queryParts))
                 .build();
             Session session = Session.create(params);
             return session.getUrl();
