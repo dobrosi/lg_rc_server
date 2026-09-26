@@ -24,7 +24,7 @@ public class SecurityConfig {
             .csrf(AbstractHttpConfigurer::disable)
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/stripe/**", "/public/**").permitAll()
+                .requestMatchers("/stripe/**").permitAll()
                 .anyRequest().authenticated()
             )
             .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()));
