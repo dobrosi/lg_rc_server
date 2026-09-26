@@ -52,11 +52,11 @@ public class StripeController {
 
     @GetMapping("/webhook-success")
     public ResponseEntity<Void> handleStripeWebhookSuccess() {
-        return ResponseEntity.status(HttpStatus.FOUND).location(URI.create(callbackUrl + "?stripe-webhook-success")).build();
+        return ResponseEntity.status(HttpStatus.FOUND).location(URI.create(callbackUrl + "/public/stripe/webhook/success")).build();
     }
 
     @GetMapping("/webhook-cancel")
     public ResponseEntity<Void> handleStripeWebhookCancel() {
-        return ResponseEntity.status(HttpStatus.FOUND).location(URI.create(callbackUrl + "?stripe-webhook-cancel")).build();
+        return ResponseEntity.status(HttpStatus.FOUND).location(URI.create(callbackUrl + "/public/stripe/webhook/cancel")).build();
     }
 }
