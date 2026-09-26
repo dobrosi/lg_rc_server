@@ -1,5 +1,7 @@
 package com.github.dobrosi.lgrcserver.controller;
 
+import java.net.URI;
+
 import com.github.dobrosi.lgrcserver.dto.CheckoutDto;
 import com.github.dobrosi.lgrcserver.dto.CustomerDto;
 import com.github.dobrosi.lgrcserver.service.CustomerService;
@@ -13,6 +15,7 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -50,5 +53,13 @@ public class CustomerController {
             // Ha a Stripe szerver hibát dob (pl. rossz API kulcs)
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Stripe hiba: " + e.getMessage());
         }
+    }
+
+    @PostMapping("/customer-portal")
+    public ResponseEntity<Void> createPortalSession(
+            @AuthenticationPrincipal Jwt jwt,
+            @RequestParam(required = false) String queryParts) {
+        return ResponseEntity.status(HttpStatus.FOUND).location(
+            URI.create(stripeService.createCustomerPortalUrl(jwt.getSubject(), queryParts))).build();
     }
 }

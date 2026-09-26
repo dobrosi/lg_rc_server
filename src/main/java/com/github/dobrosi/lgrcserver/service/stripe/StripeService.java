@@ -14,6 +14,7 @@ import com.stripe.net.Webhook;
 import com.stripe.param.checkout.SessionCreateParams;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +26,9 @@ public class StripeService {
 
     @Value("${server.url}")
     private String serverUrl;
+
+    @Value("${callback.url}")
+    private String callbackUrl;
 
     @Value("${stripe.api.publishableKey}")
     private String publishableKey;
@@ -104,6 +108,24 @@ public class StripeService {
             subscriptionService.deactivatePremiumSubscription(stripeCustomerId);
         } else {
             log.info("Kaptunk egy nem kezelt eseményt: {}", event.getType());
+        }
+    }
+
+    public String createCustomerPortalUrl(
+            String keycloakUserId,
+            String queryParts) {
+        try {
+            String stripeCustomerId = subscriptionService.getOrCreateByKeycloakId(keycloakUserId).getStripeCustomerId();
+            SessionCreateParams params = new SessionCreateParams.Builder()
+                .setCustomer(stripeCustomerId)
+                .setReturnUrl(callbackUrl + (Strings.isEmpty(queryParts) ? "" : "?" + queryParts))
+                .build();
+            Session session = Session.create(params);
+            return session.getUrl();
+
+        } catch (Exception e) {
+            log.error("Error creating Stripe customer portal URL", e);
+            throw new RuntimeException(e);
         }
     }
 }

@@ -19,10 +19,14 @@ public class SubscriptionService {
     }
 
     public void activatePremiumSubscription(String keycloakId, String stripeCustomerId) {
-        Customer user = customerService.findOrCreateByKeycloakId(keycloakId);
+        Customer user = getOrCreateByKeycloakId(keycloakId);
         user.setStripeCustomerId(stripeCustomerId);
         user.setPremium(true);
         log.info("Prémium előfizetés aktiválva a Keycloak ID-hoz: {}", keycloakId);
+    }
+
+    public Customer getOrCreateByKeycloakId(final String keycloakId) {
+        return customerService.findOrCreateByKeycloakId(keycloakId);
     }
 
     public void deactivatePremiumSubscription(final String stripeCustomerId) {

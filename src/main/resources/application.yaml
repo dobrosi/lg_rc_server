@@ -1,7 +1,10 @@
 
 server:
   port: ${PORT:8085}
-  url: https://pgy.no-ip.hu/smart-lg-tv-remote-controller
+  url: ${SERVER_URL}
+
+callback:
+  url: ${CALLBACK_URL}
 
 spring:
   forward-headers-strategy: framework
