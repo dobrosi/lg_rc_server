@@ -4,6 +4,7 @@ import java.net.URI;
 
 import com.github.dobrosi.lgrcserver.dto.CheckoutDto;
 import com.github.dobrosi.lgrcserver.dto.CustomerDto;
+import com.github.dobrosi.lgrcserver.model.Customer;
 import com.github.dobrosi.lgrcserver.service.CustomerService;
 import com.github.dobrosi.lgrcserver.service.stripe.StripeService;
 import com.stripe.exception.StripeException;
@@ -34,9 +35,11 @@ public class CustomerController {
 
     @GetMapping
     public ResponseEntity<CustomerDto> getCustomer(@AuthenticationPrincipal Jwt jwt) {
+        Customer customer = customerService.findOrCreateByKeycloakId(jwt.getSubject());
         return new ResponseEntity<>(
             new CustomerDto(
-                customerService.findOrCreateByKeycloakId(jwt.getSubject()).isPremium()),
+                customer.getKeycloakId(),
+                customer.isPremium()),
             HttpStatus.OK);
     }
 

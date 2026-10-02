@@ -1,3 +1,3 @@
 package com.github.dobrosi.lgrcserver.dto;
 
-public record CustomerDto(boolean isPremium) {}
+public record CustomerDto(Object id, boolean isPremium) {}
