@@ -44,12 +44,15 @@ public class CustomerController {
     }
 
     @PostMapping("/checkout")
-    public ResponseEntity<CheckoutDto> createCheckoutSession(@AuthenticationPrincipal Jwt jwt) {
+    public ResponseEntity<CheckoutDto> createCheckoutSession(
+        @AuthenticationPrincipal Jwt jwt,
+        @RequestParam(defaultValue = "trial") String planId
+    ) {
         // A Keycloak tokenből a 'sub' claim tartalmazza a felhasználó egyedi azonosítóját
         String keycloakUserId = jwt.getSubject();
 
         try {
-            String checkoutUrl = stripeService.createCheckoutSession(keycloakUserId, jwt.getClaimAsString("email"));
+            String checkoutUrl = stripeService.createCheckoutSession(keycloakUserId, jwt.getClaimAsString("email"), planId);
             return ResponseEntity.ok(new CheckoutDto(checkoutUrl));
 
         } catch (StripeException e) {

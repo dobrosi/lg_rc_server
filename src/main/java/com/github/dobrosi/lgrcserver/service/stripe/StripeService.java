@@ -1,5 +1,7 @@
 package com.github.dobrosi.lgrcserver.service.stripe;
 
+import java.util.Map;
+
 import com.github.dobrosi.lgrcserver.service.SubscriptionService;
 import com.stripe.Stripe;
 import com.stripe.exception.EventDataObjectDeserializationException;
@@ -33,8 +35,8 @@ public class StripeService {
     @Value("${stripe.api.webhookSigningSecret}")
     private String webhookSigningSecret;
 
-    @Value("${stripe.price.premiumId}")
-    private String premiumPriceId;
+    @Value("${stripe.prices}")
+    private Map<String, String> prices;
 
     public StripeService(final SubscriptionService subscriptionService) {
         this.subscriptionService = subscriptionService;
@@ -45,7 +47,7 @@ public class StripeService {
         Stripe.apiKey = secretKey;
     }
 
-    public String createCheckoutSession(String keycloakUserId, String email) throws StripeException {
+    public String createCheckoutSession(String keycloakUserId, String email, String planId) throws StripeException {
         log.info("Stripe checkout session létrehozása Keycloak ID-hoz: {}", keycloakUserId);
         SessionCreateParams params = SessionCreateParams.builder()
             .setMode(SessionCreateParams.Mode.SUBSCRIPTION)
@@ -55,7 +57,7 @@ public class StripeService {
             .setCustomerEmail(email)
             .addLineItem(
                 SessionCreateParams.LineItem.builder()
-                    .setPrice(premiumPriceId)
+                    .setPrice(prices.get(planId))
                     .setQuantity(1L)
                     .build()
             )
