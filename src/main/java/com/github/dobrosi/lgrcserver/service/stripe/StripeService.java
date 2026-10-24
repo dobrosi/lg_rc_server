@@ -45,7 +45,7 @@ public class StripeService {
 
     public String createCheckoutSession(String keycloakUserId, String email, String planId) throws StripeException {
         log.info("Stripe checkout session létrehozása Keycloak ID-hoz: {}", keycloakUserId);
-        boolean trial = planId.equals("-trial");
+        boolean trial = planId.toLowerCase().endsWith("-trial");
         planId = planId.replace("-trial", "");
         StripeProperties.Price price = stripeProperties.getPrices()
             .get(planId);
