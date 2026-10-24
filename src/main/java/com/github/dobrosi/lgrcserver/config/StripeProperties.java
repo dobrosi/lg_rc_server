@@ -12,11 +12,17 @@ import java.util.Map;
 public class StripeProperties {
 
     private Api api = new Api();
-    private Map<String, String> prices;
+    private Map<String, Price> prices;
 
     @Data
     public static class Api {
         private String secretKey;
         private String webhookSigningSecret;
+    }
+
+    @Data
+    public static class Price {
+        private String id;
+        private boolean subscription;
     }
 }
