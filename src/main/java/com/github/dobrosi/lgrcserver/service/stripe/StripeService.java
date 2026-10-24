@@ -19,6 +19,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import tools.jackson.databind.ObjectMapper;
+
+import static com.stripe.param.checkout.SessionCreateParams.Mode.PAYMENT;
+import static com.stripe.param.checkout.SessionCreateParams.Mode.SUBSCRIPTION;
 
 @Service
 @Slf4j
@@ -28,6 +32,8 @@ public class StripeService {
     private final SubscriptionService subscriptionService;
 
     private final StripeProperties stripeProperties;
+
+    private final ObjectMapper objectMapper;
 
     @Value("${server.url}")
     private String serverUrl;
@@ -39,15 +45,17 @@ public class StripeService {
 
     public String createCheckoutSession(String keycloakUserId, String email, String planId) throws StripeException {
         log.info("Stripe checkout session létrehozása Keycloak ID-hoz: {}", keycloakUserId);
+        StripeProperties.Price price = stripeProperties.getPrices()
+            .get(planId);
         SessionCreateParams params = SessionCreateParams.builder()
-            .setMode(SessionCreateParams.Mode.SUBSCRIPTION)
+            .setMode(price.isSubscription() ? SUBSCRIPTION : PAYMENT)
             .setSuccessUrl(serverUrl + "/public/index.html?success=true")
             .setCancelUrl(serverUrl + "/public/index.html?cancel=true")
             .setClientReferenceId(keycloakUserId)
             .setCustomerEmail(email)
             .addLineItem(
                 SessionCreateParams.LineItem.builder()
-                    .setPrice(stripeProperties.getPrices().get(planId))
+                    .setPrice(price.getId())
                     .setQuantity(1L)
                     .build()
             )
@@ -55,6 +63,7 @@ public class StripeService {
 
         try {
             Session session = Session.create(params);
+            log.info("Stripe checkout session created: {}", objectMapper.writeValueAsString(session));
             return session.getUrl();
         } catch (Exception e) {
             log.error("Error creating Stripe checkout session", e);
@@ -72,10 +81,8 @@ public class StripeService {
         EventDataObjectDeserializer dataObjectDeserializer = event.getDataObjectDeserializer();
         StripeObject stripeObject;
 
-        if (dataObjectDeserializer.getObject()
-            .isPresent()) {
-            stripeObject = dataObjectDeserializer.getObject()
-                .get();
+        if (dataObjectDeserializer.getObject().isPresent()) {
+            stripeObject = dataObjectDeserializer.getObject().get();
         } else {
             stripeObject = dataObjectDeserializer.deserializeUnsafe();
         }

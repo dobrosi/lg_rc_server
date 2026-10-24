@@ -27,6 +27,24 @@ stripe:
     secretKey: ${STRIPE_API_SECRET_KEY}
     webhookSigningSecret: ${STRIPE_API_WEBHOOK_SIGNING_SECRET}
   prices:
-    trial: ${STRIPE_PRICE_TRIAL_ID}
-    premium-annual: ${STRIPE_PRICE_PREMIUM_ANNUAL_ID}
-    premium-lifetime: ${STRIPE_PRICE_PREMIUM_LIFETIME_ID}
+    trial:
+      id: ${STRIPE_PRICE_TRIAL_ID}
+    premium-annual:
+      id: ${STRIPE_PRICE_PREMIUM_ANNUAL_ID}
+      subscription: true
+    premium-monthly:
+      id: ${STRIPE_PRICE_PREMIUM_MONTHLY_ID}
+      subscription: true
+    premium-lifetime:
+      id: ${STRIPE_PRICE_PREMIUM_LIFETIME_ID}
+logging:
+  file:
+    name: logs/application.log
+    logback:
+      rollingpolicy:
+        file-name-pattern: "logs/application-%d{yyyy-MM-dd}.%i.log.zip"
+        max-history: 30        # Hány napnyi zip fájlt tartson meg a rendszer
+        max-file-size: 10MB    # Mikor darabolja a napi fájlt (tömörítés előtt)
+        total-size-cap: 1GB    # Az archívumok maximális megengedett össztérfogata
+  level:
+    org.springframework.web.filter.CommonsRequestLoggingFilter: DEBUG
