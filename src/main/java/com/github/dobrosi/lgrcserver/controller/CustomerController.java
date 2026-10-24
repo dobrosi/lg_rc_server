@@ -46,7 +46,7 @@ public class CustomerController {
     @PostMapping("/checkout")
     public ResponseEntity<CheckoutDto> createCheckoutSession(
         @AuthenticationPrincipal Jwt jwt,
-        @RequestParam(defaultValue = "trial", required = false) String planId
+        @RequestParam String planId
     ) {
         // A Keycloak tokenből a 'sub' claim tartalmazza a felhasználó egyedi azonosítóját
         String keycloakUserId = jwt.getSubject();

@@ -27,8 +27,6 @@ stripe:
     secretKey: ${STRIPE_API_SECRET_KEY}
     webhookSigningSecret: ${STRIPE_API_WEBHOOK_SIGNING_SECRET}
   prices:
-    trial:
-      id: ${STRIPE_PRICE_TRIAL_ID}
     premium-annual:
       id: ${STRIPE_PRICE_PREMIUM_ANNUAL_ID}
       subscription: true

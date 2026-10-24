@@ -45,9 +45,11 @@ public class StripeService {
 
     public String createCheckoutSession(String keycloakUserId, String email, String planId) throws StripeException {
         log.info("Stripe checkout session létrehozása Keycloak ID-hoz: {}", keycloakUserId);
+        boolean trial = planId.equals("-trial");
+        planId = planId.replace("-trial", "");
         StripeProperties.Price price = stripeProperties.getPrices()
             .get(planId);
-        SessionCreateParams params = SessionCreateParams.builder()
+        var paramsBuilder = SessionCreateParams.builder()
             .setMode(price.isSubscription() ? SUBSCRIPTION : PAYMENT)
             .setSuccessUrl(serverUrl + "/public/index.html?success=true")
             .setCancelUrl(serverUrl + "/public/index.html?cancel=true")
@@ -58,11 +60,16 @@ public class StripeService {
                     .setPrice(price.getId())
                     .setQuantity(1L)
                     .build()
-            )
-            .build();
-
+            );
+        if (trial) {
+            paramsBuilder.setSubscriptionData(
+                SessionCreateParams.SubscriptionData.builder()
+                    .setTrialPeriodDays(7L)
+                    .build()
+            );
+        }
         try {
-            Session session = Session.create(params);
+            Session session = Session.create(paramsBuilder.build());
             log.info("Stripe checkout session created: {}", toJson(session));
         return session.getUrl();
         } catch (Exception e) {
