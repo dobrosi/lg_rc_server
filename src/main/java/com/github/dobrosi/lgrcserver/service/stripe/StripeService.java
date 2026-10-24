@@ -63,7 +63,8 @@ public class StripeService {
 
         try {
             Session session = Session.create(params);
-            log.info("Stripe checkout session created: {}", objectMapper.writeValueAsString(session));
+            log.info("Stripe checkout session created: {}", objectMapper.writeValueAsString(
+                new String[]{session.getClientReferenceId(), session.getUrl(), session.getId(), session.getCustomer(), session.getSubscription(), session.getMode()}));
             return session.getUrl();
         } catch (Exception e) {
             log.error("Error creating Stripe checkout session", e);
