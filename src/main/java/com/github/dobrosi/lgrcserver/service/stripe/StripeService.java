@@ -1,7 +1,6 @@
 package com.github.dobrosi.lgrcserver.service.stripe;
 
-import java.util.Map;
-
+import com.github.dobrosi.lgrcserver.config.StripeProperties;
 import com.github.dobrosi.lgrcserver.service.SubscriptionService;
 import com.stripe.Stripe;
 import com.stripe.exception.EventDataObjectDeserializationException;
@@ -15,6 +14,7 @@ import com.stripe.model.checkout.Session;
 import com.stripe.net.Webhook;
 import com.stripe.param.checkout.SessionCreateParams;
 import jakarta.annotation.PostConstruct;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,29 +22,19 @@ import org.springframework.stereotype.Service;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class StripeService {
 
     private final SubscriptionService subscriptionService;
 
+    private final StripeProperties stripeProperties;
+
     @Value("${server.url}")
     private String serverUrl;
 
-    @Value("${stripe.api.secretKey}")
-    private String secretKey;
-
-    @Value("${stripe.api.webhookSigningSecret}")
-    private String webhookSigningSecret;
-
-    @Value("${stripe.prices}")
-    private Map<String, String> prices;
-
-    public StripeService(final SubscriptionService subscriptionService) {
-        this.subscriptionService = subscriptionService;
-    }
-
     @PostConstruct
     public void init() {
-        Stripe.apiKey = secretKey;
+        Stripe.apiKey = stripeProperties.getApi().getSecretKey();
     }
 
     public String createCheckoutSession(String keycloakUserId, String email, String planId) throws StripeException {
@@ -57,7 +47,7 @@ public class StripeService {
             .setCustomerEmail(email)
             .addLineItem(
                 SessionCreateParams.LineItem.builder()
-                    .setPrice(prices.get(planId))
+                    .setPrice(stripeProperties.getPrices().get(planId))
                     .setQuantity(1L)
                     .build()
             )
@@ -77,7 +67,7 @@ public class StripeService {
         final String sigHeader
     ) throws SignatureVerificationException, EventDataObjectDeserializationException {
         log.info("Stripe webhook érkezett. payload: {}, sigHeader: {}", payload, sigHeader);
-        Event event = Webhook.constructEvent(payload, sigHeader, webhookSigningSecret);
+        Event event = Webhook.constructEvent(payload, sigHeader, stripeProperties.getApi().getWebhookSigningSecret());
 
         EventDataObjectDeserializer dataObjectDeserializer = event.getDataObjectDeserializer();
         StripeObject stripeObject;
