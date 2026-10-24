@@ -63,9 +63,8 @@ public class StripeService {
 
         try {
             Session session = Session.create(params);
-            log.info("Stripe checkout session created: {}", objectMapper.writeValueAsString(
-                new String[]{session.getClientReferenceId(), session.getUrl(), session.getId(), session.getCustomer(), session.getSubscription(), session.getMode()}));
-            return session.getUrl();
+            log.info("Stripe checkout session created: {}", toJson(session));
+        return session.getUrl();
         } catch (Exception e) {
             log.error("Error creating Stripe checkout session", e);
             throw e;
@@ -92,6 +91,7 @@ public class StripeService {
             Session session = (Session) stripeObject;
             String customerId = session.getCustomer();
             String clientReferenceId = session.getClientReferenceId();
+            log.info("Stripe checkout session completed: {}", toJson(session));
             subscriptionService.activatePremiumSubscription(
                 clientReferenceId,
                 customerId);
@@ -103,6 +103,11 @@ public class StripeService {
         } else {
             log.info("Kaptunk egy nem kezelt eseményt: {}", event.getType());
         }
+    }
+
+    private String toJson(final Session session) {
+        return objectMapper.writeValueAsString(
+            new String[]{session.getCustomer(), session.getClientReferenceId(), session.getUrl(), session.getId(), session.getSubscription(), session.getMode()});
     }
 
     public String createCustomerPortalUrl(
