@@ -16,6 +16,14 @@
     "allDeclaredFields": true
   },
   {
+    "name": "org.hibernate.service.internal.ServiceLogger_$logger",
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicMethods": true,
+    "allDeclaredFields": true
+  },
+  {
     "name": "org.hibernate.internal.CoreLogging_$logger",
     "allDeclaredConstructors": true,
     "allDeclaredMethods": true,
