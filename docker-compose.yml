@@ -1,12 +1,14 @@
 services:
     lgrcserver:
-        image: lgrcserver
         build:
             context: .
-            dockerfile: docker/Dockerfile
-        env_file:
-            - .env
+            dockerfile: Dockerfile
+        container_name: lg_rc_server
         ports:
             - "8085:8085"
+        env_file:
+            - .env
         volumes:
-            -   ./data:/root/dssweb
+            - ./application.yml:/app/application.yml:ro
+        restart: unless-stopped
+        network_mode: "host"
