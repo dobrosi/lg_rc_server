@@ -35,14 +35,3 @@ stripe:
       subscription: true
     premium-lifetime:
       id: ${STRIPE_PRICE_PREMIUM_LIFETIME_ID}
-logging:
-  file:
-    name: logs/application.log
-    logback:
-      rollingpolicy:
-        file-name-pattern: "logs/application-%d{yyyy-MM-dd}.%i.log.zip"
-        max-history: 30        # Hány napnyi zip fájlt tartson meg a rendszer
-        max-file-size: 10MB    # Mikor darabolja a napi fájlt (tömörítés előtt)
-        total-size-cap: 1GB    # Az archívumok maximális megengedett össztérfogata
-  level:
-    org.springframework.web.filter.CommonsRequestLoggingFilter: DEBUG
