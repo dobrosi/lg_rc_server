@@ -20,7 +20,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
-          java-version: '17' # Vagy '21', a projektednek megfelelően
+          java-version: '25' # Vagy '21', a projektednek megfelelően
           cache: 'maven'
 
       - name: Bejelentkezés a GitHub Container Registry-be (GHCR)
@@ -33,7 +33,7 @@ jobs:
       - name: Natív Docker kép építése és pusholása
         run: |
           # Az image neve a GitHub felhasználóneved/repo neved alapján
-          IMAGE_NAME=ghcr.io/${{ github.repository_owner }}/spring-boot-app:latest
+          IMAGE_NAME=ghcr.io/${{ github.repository_owner }}/lg_rc_server:latest
           
           echo "Natív kép építése Paketo Buildpacks segítségével..."
           ./mvnw spring-boot:build-image -Pnative \
