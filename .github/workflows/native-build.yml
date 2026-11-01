@@ -1,0 +1,43 @@
+name: Build Spring Boot Native Docker Image
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch: # Manuálisan is elindítható a GitHub felületről
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write # Szükséges a GitHub Container Registry-be való feltöltéshez
+
+    steps:
+      - name: Kód letöltése (Checkout)
+        uses: actions/checkout@v4
+
+      - name: Java környezet beállítása
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17' # Vagy '21', a projektednek megfelelően
+          cache: 'maven'
+
+      - name: Bejelentkezés a GitHub Container Registry-be (GHCR)
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Natív Docker kép építése és pusholása
+        run: |
+          # Az image neve a GitHub felhasználóneved/repo neved alapján
+          IMAGE_NAME=ghcr.io/${{ github.repository_owner }}/spring-boot-app:latest
+          
+          echo "Natív kép építése Paketo Buildpacks segítségével..."
+          ./mvnw spring-boot:build-image -Pnative \
+            -Dspring-boot.build-image.imageName=$IMAGE_NAME
+          
+          echo "Feltöltés a GHCR-be..."
+          docker push $IMAGE_NAME

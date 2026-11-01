@@ -30,7 +30,7 @@ public class DeviceController {
     }
 
     @GetMapping("/save")
-    public void saveDavices(@AuthenticationPrincipal Jwt jwt, Collection<DeviceDto> deviceDtos) {
+    public void saveDevices(@AuthenticationPrincipal Jwt jwt, Collection<DeviceDto> deviceDtos) {
         deviceService.saveDevices(jwt.getSubject(), deviceDtos);
     }
 
