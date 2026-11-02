@@ -1,0 +1,129 @@
+{
+  "id": "6690a884-8e4e-4171-858a-458d3674aee6",
+  "prevId": "00000000-0000-0000-0000-000000000000",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "public.Customers": {
+      "name": "Customers",
+      "schema": "",
+      "columns": {
+        "keycloakId": {
+          "name": "keycloakId",
+          "type": "varchar",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "stripeCustomerId": {
+          "name": "stripeCustomerId",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "isPremium": {
+          "name": "isPremium",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "Customers_keycloakId_unique": {
+          "name": "Customers_keycloakId_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "keycloakId"
+          ]
+        },
+        "Customers_stripeCustomerId_unique": {
+          "name": "Customers_stripeCustomerId_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "stripeCustomerId"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.Devices": {
+      "name": "Devices",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "ip": {
+          "name": "ip",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "clientKey": {
+          "name": "clientKey",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "model": {
+          "name": "model",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "CustomerKeycloakId": {
+          "name": "CustomerKeycloakId",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "Devices_CustomerKeycloakId_Customers_keycloakId_fk": {
+          "name": "Devices_CustomerKeycloakId_Customers_keycloakId_fk",
+          "tableFrom": "Devices",
+          "tableTo": "Customers",
+          "columnsFrom": [
+            "CustomerKeycloakId"
+          ],
+          "columnsTo": [
+            "keycloakId"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    }
+  },
+  "enums": {},
+  "schemas": {},
+  "sequences": {},
+  "roles": {},
+  "policies": {},
+  "views": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}

@@ -23,10 +23,13 @@ router.post('/checkout', async (req, res) => {
     const email = req.auth.payload.email;
     const { planId } = req.query;
 
+    console.log(`Checkout kérés: keycloakId=${keycloakId}, email=${email}, planId=${planId}`);
+
     const checkoutUrl = await stripeService.createCheckoutSession(keycloakId, email, planId);
+    console.log(`Generált Checkout URL: ${checkoutUrl}`);
     res.json({ url: checkoutUrl });
   } catch (err) {
-    console.error(`Stripe hiba: ${err.message}`);
+    console.error(`Stripe hiba: ${err.message}`, err);
     res.status(500).json({ error: `Stripe hiba: ${err.message}` });
   }
 });
