@@ -1,5 +1,6 @@
 services:
     lgrcserver:
+        image: lgrcserver:latest
         build:
             context: .
             dockerfile: Dockerfile
