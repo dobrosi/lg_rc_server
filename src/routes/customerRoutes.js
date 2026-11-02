@@ -27,7 +27,7 @@ router.post('/checkout', async (req, res) => {
 
     const checkoutUrl = await stripeService.createCheckoutSession(keycloakId, email, planId);
     console.log(`Generált Checkout URL: ${checkoutUrl}`);
-    res.json({ url: checkoutUrl });
+    res.json({ checkoutUrl: checkoutUrl });
   } catch (err) {
     console.error(`Stripe hiba: ${err.message}`, err);
     res.status(500).json({ error: `Stripe hiba: ${err.message}` });
