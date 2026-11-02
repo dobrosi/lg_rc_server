@@ -1,5 +1,13 @@
-FROM ubuntu:latest
+FROM node:20-slim
+
 WORKDIR /app
-COPY target/lgrcserver /app/lgrcserver
+
+COPY package*.json ./
+
+RUN npm install --production
+
+COPY . .
+
 EXPOSE 8085
-CMD ["/app/lgrcserver"]
+
+CMD ["npm", "start"]
