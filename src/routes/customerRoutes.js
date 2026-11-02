@@ -12,6 +12,7 @@ router.get('/', async (req, res) => {
       premium: customer.isPremium
     });
   } catch (err) {
+    console.error(`Hiba a /customer végponton: ${err.message}`, err);
     res.status(500).json({ error: err.message });
   }
 });

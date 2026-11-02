@@ -30,7 +30,8 @@ app.use('/public', express.static(path.join(__dirname, 'static/public')));
 const jwtCheck = auth({
   audience: process.env.AUDIENCE || 'account',
   issuerBaseURL: process.env.ISSUER_BASE_URL || 'https://auth.pgy.no-ip.hu/realms/pgy',
-  tokenSigningAlg: 'RS256'
+  tokenSigningAlg: 'RS256',
+  clockTolerance: 60 // 60 másodperc tolerancia az óraeltérésre
 });
 
 // Védett route-ok
