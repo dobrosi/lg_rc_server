@@ -8,7 +8,7 @@ router.get('/', async (req, res) => {
     const keycloakId = req.auth.payload.sub;
     const customer = await customerService.findOrCreateByKeycloakId(keycloakId);
     res.json({
-      keycloakId: customer.keycloakId,
+      id: customer.keycloakId,
       premium: customer.isPremium
     });
   } catch (err) {
