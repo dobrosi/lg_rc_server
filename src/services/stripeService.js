@@ -73,6 +73,7 @@ class StripeService {
     if (event.type === 'checkout.session.completed') {
       const session = dataObject;
       const customerId = session.customer;
+      console.log(`Előfizetés indul! Stripe Customer ID: ${customerId}`);
       const clientReferenceId = session.client_reference_id;
       await subscriptionService.activatePremiumSubscription(clientReferenceId, customerId);
     } else if (event.type === 'customer.subscription.deleted') {
